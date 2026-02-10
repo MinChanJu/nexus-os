@@ -18,6 +18,45 @@
 - 상태 관리: zustand
 - 빌드 도구: Vercel
 - 인증: NextAuth.js
+- 패키지 매니저: pnpm
+
+## 시작하기
+
+### 사전 요구사항
+
+- Node.js 20 이상
+- pnpm 10 이상
+
+### 설치
+
+```bash
+# 의존성 설치
+pnpm install
+```
+
+### 개발 서버 실행
+
+```bash
+pnpm dev
+```
+
+브라우저에서 [http://localhost:3000](http://localhost:3000)을 열어 결과를 확인하세요.
+
+### 기타 명령어
+
+```bash
+# 코드 포맷팅
+pnpm format
+
+# 린트 검사
+pnpm lint
+
+# 프로덕션 빌드
+pnpm build
+
+# 프로덕션 서버 실행
+pnpm start
+```
 
 ## 개발 단계
 

@@ -103,7 +103,7 @@ interface Window {
   title: string;
   position: { x: number; y: number };
   size: { width: number; height: number };
-  state: 'normal' | 'maximized' | 'minimized';
+  state: "normal" | "maximized" | "minimized";
   zIndex: number;
   isActive: boolean;
   content: ReactNode;
@@ -112,11 +112,21 @@ interface Window {
 // Window Manager Store
 const useWindowStore = create<WindowStore>((set) => ({
   windows: [],
-  openWindow: (window) => { /* ... */ },
-  closeWindow: (id) => { /* ... */ },
-  focusWindow: (id) => { /* ... */ },
-  minimizeWindow: (id) => { /* ... */ },
-  maximizeWindow: (id) => { /* ... */ },
+  openWindow: (window) => {
+    /* ... */
+  },
+  closeWindow: (id) => {
+    /* ... */
+  },
+  focusWindow: (id) => {
+    /* ... */
+  },
+  minimizeWindow: (id) => {
+    /* ... */
+  },
+  maximizeWindow: (id) => {
+    /* ... */
+  },
 }));
 ```
 
@@ -127,7 +137,7 @@ const useWindowStore = create<WindowStore>((set) => ({
 interface FileNode {
   id: string;
   name: string;
-  type: 'file' | 'folder';
+  type: "file" | "folder";
   parentId: string | null;
   path: string;
   size?: number;
@@ -149,12 +159,12 @@ interface FileNode {
 ### 2.1 디자인 시스템
 
 #### 2.1.1 색상 팔레트
+
 - **라이트 모드**:
   - Primary: #3B82F6 (Blue)
   - Background: #F9FAFB
   - Surface: #FFFFFF
   - Text: #111827
-  
 - **다크 모드**:
   - Primary: #60A5FA
   - Background: #0F172A
@@ -162,20 +172,24 @@ interface FileNode {
   - Text: #F1F5F9
 
 #### 2.1.2 타이포그래피
+
 - 기본 폰트: Inter, 'Noto Sans KR' (한글)
 - 모노스페이스: 'JetBrains Mono', monospace
 
 #### 2.1.3 그림자 & 블러
+
 - 창: `shadow-2xl` + `backdrop-blur-lg`
 - 모달: `shadow-xl`
 - 카드: `shadow-md`
 
 ### 2.2 반응형 디자인
+
 - **데스크톱**: 1920x1080 기준 최적화
 - **태블릿**: 터치 제스처 지원, UI 요소 확대
 - **모바일**: 간소화된 UI, 하단 네비게이션
 
 ### 2.3 접근성 (A11y)
+
 - 키보드 네비게이션 지원
 - ARIA 레이블
 - 색상 대비비 WCAG AA 준수
@@ -184,6 +198,7 @@ interface FileNode {
 ### 2.4 사용자 인터랙션
 
 #### 2.4.1 키보드 단축키
+
 - `Ctrl/Cmd + N`: 새 창
 - `Ctrl/Cmd + W`: 창 닫기
 - `Alt + Tab`: 창 전환
@@ -192,6 +207,7 @@ interface FileNode {
 - `F11`: 전체화면
 
 #### 2.4.2 마우스 제스처
+
 - 더블 클릭: 파일/폴더 열기
 - 우클릭: 컨텍스트 메뉴
 - 드래그: 파일 이동, 창 이동
@@ -215,7 +231,7 @@ model User {
   storageLimit  BigInt    @default(5368709120) // 5GB
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  
+
   files         File[]
   sessions      Session[]
 }
@@ -236,11 +252,11 @@ model File {
   deletedAt   DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  
+
   user        User      @relation(fields: [userId], references: [id])
   parent      File?     @relation("FileTree", fields: [parentId], references: [id])
   children    File[]    @relation("FileTree")
-  
+
   @@index([userId, path])
   @@index([parentId])
 }
@@ -251,7 +267,7 @@ model Session {
   token        String   @unique
   expiresAt    DateTime
   createdAt    DateTime @default(now())
-  
+
   user         User     @relation(fields: [userId], references: [id])
 }
 ```
@@ -259,17 +275,20 @@ model Session {
 ### 3.2 데이터 모델 설명
 
 #### User 모델
+
 - 사용자 계정 정보 관리
 - 저장소 용량 관리 (사용량/할당량)
 - 사용자 설정을 JSON으로 저장 (유연한 확장)
 
 #### File 모델
+
 - 파일 및 폴더의 메타데이터
 - 트리 구조 지원 (self-referencing relation)
 - 소프트 삭제 (isDeleted, deletedAt)
 - 클라우드 저장소 키 (storageKey)
 
 #### Session 모델
+
 - 사용자 세션 관리
 - 토큰 기반 인증
 - 만료 시간 관리
@@ -281,9 +300,11 @@ model Session {
 ### 4.1 인증 API
 
 #### POST /api/auth/register
+
 사용자 회원가입
 
 **요청:**
+
 ```json
 {
   "email": "user@example.com",
@@ -293,6 +314,7 @@ model Session {
 ```
 
 **응답:**
+
 ```json
 {
   "success": true,
@@ -305,9 +327,11 @@ model Session {
 ```
 
 #### POST /api/auth/login
+
 사용자 로그인
 
 **요청:**
+
 ```json
 {
   "email": "user@example.com",
@@ -316,6 +340,7 @@ model Session {
 ```
 
 **응답:**
+
 ```json
 {
   "success": true,
@@ -330,13 +355,16 @@ model Session {
 ### 4.2 파일 시스템 API
 
 #### GET /api/files
+
 파일/폴더 목록 조회
 
 **쿼리 파라미터:**
+
 - `path`: 폴더 경로 (기본값: "/")
 - `type`: "file" | "folder" | "all"
 
 **응답:**
+
 ```json
 {
   "files": [
@@ -354,9 +382,11 @@ model Session {
 ```
 
 #### POST /api/files
+
 파일/폴더 생성
 
 **요청:**
+
 ```json
 {
   "name": "new-folder",
@@ -366,23 +396,29 @@ model Session {
 ```
 
 #### PUT /api/files/:id
+
 파일/폴더 수정 (이름 변경, 이동 등)
 
 #### DELETE /api/files/:id
+
 파일/폴더 삭제 (휴지통으로 이동)
 
 #### POST /api/files/upload
+
 파일 업로드 (multipart/form-data)
 
 #### GET /api/files/:id/download
+
 파일 다운로드
 
 ### 4.3 사용자 설정 API
 
 #### GET /api/user/settings
+
 사용자 설정 조회
 
 #### PUT /api/user/settings
+
 사용자 설정 업데이트
 
 ---
@@ -392,6 +428,7 @@ model Session {
 ### 5.1 Zustand Stores
 
 #### windowStore.ts
+
 ```typescript
 interface WindowStore {
   windows: Window[];
@@ -407,6 +444,7 @@ interface WindowStore {
 ```
 
 #### fileSystemStore.ts
+
 ```typescript
 interface FileSystemStore {
   currentPath: string;
@@ -415,7 +453,7 @@ interface FileSystemStore {
   clipboard: ClipboardData | null;
   navigateTo: (path: string) => void;
   selectFile: (id: string, multiSelect?: boolean) => void;
-  createFile: (name: string, type: 'file' | 'folder') => Promise<void>;
+  createFile: (name: string, type: "file" | "folder") => Promise<void>;
   deleteFile: (id: string) => Promise<void>;
   renameFile: (id: string, newName: string) => Promise<void>;
   copyFile: (id: string) => void;
@@ -425,15 +463,16 @@ interface FileSystemStore {
 ```
 
 #### settingsStore.ts
+
 ```typescript
 interface SettingsStore {
-  theme: 'light' | 'dark';
+  theme: "light" | "dark";
   accentColor: string;
   fontSize: number;
   wallpaper: string | null;
   locale: string;
   notifications: NotificationSettings;
-  setTheme: (theme: 'light' | 'dark') => void;
+  setTheme: (theme: "light" | "dark") => void;
   setAccentColor: (color: string) => void;
   setWallpaper: (url: string | null) => void;
 }
@@ -498,25 +537,29 @@ interface AppProps {
 ## 7. 성능 최적화 전략
 
 ### 7.1 코드 스플리팅
+
 - 앱별 동적 import
 - Route 기반 스플리팅
 - 조건부 렌더링 시 lazy loading
 
 ```typescript
-const TextEditor = lazy(() => import('@/components/apps/TextEditor'));
-const ImageViewer = lazy(() => import('@/components/apps/ImageViewer'));
+const TextEditor = lazy(() => import("@/components/apps/TextEditor"));
+const ImageViewer = lazy(() => import("@/components/apps/ImageViewer"));
 ```
 
 ### 7.2 메모이제이션
+
 - React.memo로 불필요한 리렌더링 방지
 - useMemo로 비용이 큰 계산 캐싱
 - useCallback으로 함수 참조 안정화
 
 ### 7.3 가상화
+
 - 파일 목록이 많을 때 react-virtual 사용
 - 무한 스크롤 구현
 
 ### 7.4 이미지 최적화
+
 - Next.js Image 컴포넌트 사용
 - WebP 포맷 변환
 - 지연 로딩
@@ -526,6 +569,7 @@ const ImageViewer = lazy(() => import('@/components/apps/ImageViewer'));
 ## 8. 보안 설계
 
 ### 8.1 인증 플로우
+
 1. 사용자 로그인 → JWT 토큰 발급
 2. 토큰을 HttpOnly 쿠키에 저장
 3. 모든 API 요청에 토큰 자동 포함
@@ -533,12 +577,14 @@ const ImageViewer = lazy(() => import('@/components/apps/ImageViewer'));
 5. 만료 시 자동 갱신 또는 재로그인
 
 ### 8.2 파일 업로드 보안
+
 - 파일 타입 검증 (MIME type + 확장자)
 - 파일 크기 제한 (예: 100MB)
 - 바이러스 스캔 (선택)
 - 파일명 sanitization
 
 ### 8.3 API 보안
+
 - Rate Limiting (IP 기반)
 - Input validation (Zod)
 - SQL Injection 방어 (Prisma)
@@ -549,21 +595,25 @@ const ImageViewer = lazy(() => import('@/components/apps/ImageViewer'));
 ## 9. 테스트 전략
 
 ### 9.1 단위 테스트
+
 - 모든 유틸리티 함수
 - Store 로직
 - 커스텀 훅
 
 ### 9.2 컴포넌트 테스트
+
 - UI 컴포넌트 렌더링
 - 사용자 인터랙션
 - 상태 변화
 
 ### 9.3 통합 테스트
+
 - API Routes
 - 데이터베이스 작업
 - 인증 플로우
 
 ### 9.4 E2E 테스트
+
 - 주요 사용자 플로우
 - 크로스 브라우저 테스트
 - 반응형 테스트
