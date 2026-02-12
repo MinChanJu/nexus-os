@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -13,7 +13,7 @@ import OAuthButton from "@/components/OAuthButton";
 
 type AuthMode = "signin" | "signup";
 
-const Login = () => {
+const LoginContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [callbackUrl, setCallbackUrl] = useState<string>("/");
@@ -273,6 +273,14 @@ const Login = () => {
         </motion.p>
       </div>
     </div>
+  );
+};
+
+const Login = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 };
 
